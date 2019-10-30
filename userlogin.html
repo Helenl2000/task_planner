@@ -11,7 +11,7 @@
     <input type="text" id="inpEmail" placeholder="E-mail">    
     <input type="password" id="inpPasswrd" placeholder="Password">
     <br><br>
-    <button id="btnCreate">Create user</button>
+    <button id="btnLogin">Login</button>
     <h3 id="txtResult">Result...</h3>
 </body>
 
@@ -19,12 +19,12 @@
 
     let inpEmail = document.getElementById('inpEmail');    
     let inpPasswrd = document.getElementById('inpPasswrd');
-    let btnCreate = document.getElementById('btnCreate');
+    let btnLogin = document.getElementById('btnLogin');
     let txtResult = document.getElementById('txtResult');
 
-    btnCreate.addEventListener('click', async function(evt) {
+    btnLogin.addEventListener('click', async function(evt) {
 
-        let url = "http://localhost:3000/users";
+        let url = "http://localhost:3000/auth";
 
         let updata = {
             email: inpEmail.value,
@@ -38,9 +38,15 @@
         }
 
         try {
-            var resp = await fetch(url, cfg);
+            var resp = await fetch(url, cfg);            
             var data = await resp.json();
-            txtResult.innerHTML = data.msg; 
+
+            if (resp.status > 202) {
+                throw(data);
+            };
+            
+            txtResult.innerHTML = data.email + " is logged in!";
+            sessionStorage.setItem("logindata", JSON.stringify(data));
         }
         catch (err) {
             console.log(err);

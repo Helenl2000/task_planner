@@ -7,39 +7,35 @@
     <title>My document</title>
 </head>
 
-<body>
-    <input type="text" id="inpDest" placeholder="Destination">
-    <input type="date" id="inpDate">
-    <input type="number" id="inpKm" placeholder="km">
+<body>    
     <input type="text" id="inpDescr" placeholder="Description">
+    <input type="number" id="inpAmount" placeholder="Amount in NOK">
     <br><br>
-    <button id="btnCreate">Create travel</button>
+    <button id="btnCreate">Create expense voucher</button>
     <h3 id="txtResult">Result...</h3>
 </body>
 
-<script>
-
-    let inpDest = document.getElementById('inpDest');    
-    let inpDate = document.getElementById('inpDate');
-    let inpKm = document.getElementById('inpKm');
+<script>    
+    
     let inpDescr = document.getElementById('inpDescr');
+    let inpAmount = document.getElementById('inpAmount');
     let btnCreate = document.getElementById('btnCreate');
     let txtResult = document.getElementById('txtResult');
 
+    let trvID = sessionStorage.getItem("travelid");
+
     btnCreate.addEventListener('click', async function(evt) {
 
-        let url = "http://localhost:3000/travels";
+        let url = "http://localhost:3000/expenses";
 
         let logindata = JSON.parse(sessionStorage.getItem("logindata"));
         let token = logindata.token;
-        
-        let updata = {
-            dest: inpDest.value,
-            date: inpDate.value,
-            km: inpKm.value,
+
+        let updata = {           
             descr: inpDescr.value,
-            userid: logindata.userid
-        }        
+            amount: inpAmount.value,
+            travelid: trvID
+        }
         
         let cfg = {
             method: "POST",
@@ -58,7 +54,7 @@
                 throw(data);
             };
 
-            txtResult.innerHTML = data.msg; 
+            txtResult.innerHTML = data.msg + " for " + inpDescr.value; 
         }
         catch (err) {
             console.log(err);
